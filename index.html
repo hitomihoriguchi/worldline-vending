@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>世界線自販機™｜1プレイで“未来記憶”を手に入れる</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #0b0c10; color: #fff; margin: 0; padding: 0; }
+    .wrap { max-width: 800px; margin: auto; padding: 20px; }
+    .card { background: rgba(255,255,255,0.05); border: 1px solid #222634; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+    label { display: block; margin-top: 10px; }
+    input[type=text] { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #444; background: #121318; color: #fff; }
+    button { padding: 10px 14px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; }
+    .primary { background: linear-gradient(135deg,#7aa2ff,#a07cff); color: #0b0c10; }
+    .ghost { background: transparent; border: 1px solid #444; color: #fff; }
+    pre { white-space: pre-wrap; background: #121318; padding: 10px; border-radius: 6px; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>世界線自販機™ デモ（PayPal Sandbox）</h1>
+    <div class="card">
+      <div id="paypal-button-container"></div>
+      <div id="ticketOut" style="margin-top:20px; display:none; white-space:pre-wrap;"></div>
+    </div>
+    <div class="card">
+      <form id="demoForm">
+        <label>Q1｜未来の朝、あなたが目覚める場所は？<br><input id="q1" type="text" placeholder="例：海辺の家／高層ホテルのスイート"></label>
+        <label>Q2｜今日、誰と会い、何を分かち合っている？<br><input id="q2" type="text" placeholder="例：編集者と出版ミーティング／投資家と新事業の合意"></label>
+        <label>Q3｜一番の成功は？ それはどんな感情？<br><input id="q3" type="text" placeholder="例：海外展開の契約成立／静かな確信と高揚"></label>
+        <div style="margin-top:12px; display:flex; gap:10px;">
+          <button type="submit" class="primary">結果を生成</button>
+          <button type="button" class="ghost" id="demoClear">クリア</button>
+        </div>
+      </form>
+      <pre id="demoOut"></pre>
+    </div>
+  </div>
+
+  <!-- PayPal SDK（Sandbox：ひとみさんのClient ID） -->
+  <script src="https://www.paypal.com/sdk/js?client-id=AeAzwLiWSZGELQgyealWAwKK99UVE_6PAASAzVQugsZsWU7GvPp7dvpDNkHAEN29aL2PXwiJjC2Z0mL_&currency=JPY&intent=capture"></script>
+  <script>
+    const ticketOut = document.getElementById('ticketOut');
+    function uuid(){return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16))}
+    function makeLink(){
+      const token = uuid();
+      const expiresAt = new Date(Date.now()+24*60*60*1000);
+      const url = `https://example.com/play?token=${token}`;
+      ticketOut.style.display='block';
+      ticketOut.textContent = `✅ 決済完了（Sandboxデモ）\n\nワンタイムURL: ${url}\n有効期限: ${expiresAt.toLocaleString()}`;
+    }
+    paypal.Buttons({
+      style: { layout: 'vertical', color: 'gold', shape: 'pill', label: 'paypal' },
+      createOrder: (data, actions) => actions.order.create({
+        purchase_units: [{ amount: { currency_code: 'JPY', value: '3000' }, description: '世界線自販機™ - 1プレイ' }]
+      }),
+      onApprove: async (data, actions) => {
+        await actions.order.capture();
+        makeLink();
+      }
+    }).render('#paypal-button-container');
+  </script>
+
+  <script>
+    const form = document.getElementById('demoForm');
+    const outDemo = document.getElementById('demoOut');
+    const clearBtn = document.getElementById('demoClear');
+    function genStory(a1,a2,a3){
+      return `— 未来の記憶 —\n\n${a1||'（未入力）'} で目覚めたあなたは、${a2||'（未入力）'} を通じて今日の中心線を定める。\n今日の成功は「${a3||'（未入力）'}」。\n静かな確信が身体に落ち、次の行動は 3 ステップで明確になる。\n\n① 朝の 5 分：その場面の呼吸を再体験\n② 午前：世界線に沿うタスクを 1 つだけ完了\n③ 夜：今日の象徴を 1 行で記録`;
+    }
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const a1 = document.getElementById('q1').value.trim();
+      const a2 = document.getElementById('q2').value.trim();
+      const a3 = document.getElementById('q3').value.trim();
+      outDemo.textContent = genStory(a1,a2,a3);
+    });
+    clearBtn.addEventListener('click', ()=>{
+      ['q1','q2','q3'].forEach(id=>document.getElementById(id).value='');
+      outDemo.textContent='';
+    });
+  </script>
+</body>
+</html>
