@@ -1,83 +1,79 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>世界線自販機™｜1プレイで“未来記憶”を手に入れる</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>奇跡が起きた未来の一日を描く — 20の問い</title>
+  <meta name="description" content="20の問いに答えると、AIが一人称の『奇跡の未来日記』を自動生成します。" />
   <style>
-    body { font-family: system-ui, sans-serif; background: #0b0c10; color: #fff; margin: 0; padding: 0; }
-    .wrap { max-width: 800px; margin: auto; padding: 20px; }
-    .card { background: rgba(255,255,255,0.05); border: 1px solid #222634; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-    label { display: block; margin-top: 10px; }
-    input[type=text] { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #444; background: #121318; color: #fff; }
-    button { padding: 10px 14px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; }
-    .primary { background: linear-gradient(135deg,#7aa2ff,#a07cff); color: #0b0c10; }
-    .ghost { background: transparent; border: 1px solid #444; color: #fff; }
-    pre { white-space: pre-wrap; background: #121318; padding: 10px; border-radius: 6px; margin-top: 12px; }
+    :root { --bg:#0b0c10; --ink:#e9f1ff; --muted:#a9b4c9; --card:#121318; --line:#222634; --accent:#7aa2ff; --accent2:#a07cff; }
+    * { box-sizing: border-box; } body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.65 system-ui,sans-serif; }
+    .wrap { max-width:960px; margin:0 auto; padding:24px; } h1{margin:0 0 8px; font-size:clamp(22px,4.4vw,34px); line-height:1.2;}
+    .sub{color:var(--muted); margin:0 0 18px;} .card{background:rgba(255,255,255,.05); border:1px solid var(--line); border-radius:14px; padding:18px;}
+    label{display:block; margin-top:12px;} input[type=text]{width:100%; padding:12px; border-radius:10px; border:1px solid var(--line); background:var(--card); color:var(--ink);}
+    .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;} button{border:none; border-radius:12px; padding:12px 16px; font-weight:700; cursor:pointer;}
+    .primary{background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#0b0c10;} .ghost{background:transparent; border:1px solid var(--line); color:var(--ink);}
+    .out{white-space:pre-wrap; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px; margin-top:14px; min-height:120px;}
+    .note{color:var(--muted); font-size:13px;}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>世界線自販機™ デモ（PayPal Sandbox）</h1>
-    <div class="card">
-      <div id="paypal-button-container"></div>
-      <div id="ticketOut" style="margin-top:20px; display:none; white-space:pre-wrap;"></div>
-    </div>
-    <div class="card">
-      <form id="demoForm">
-        <label>Q1｜未来の朝、あなたが目覚める場所は？<br><input id="q1" type="text" placeholder="例：海辺の家／高層ホテルのスイート"></label>
-        <label>Q2｜今日、誰と会い、何を分かち合っている？<br><input id="q2" type="text" placeholder="例：編集者と出版ミーティング／投資家と新事業の合意"></label>
-        <label>Q3｜一番の成功は？ それはどんな感情？<br><input id="q3" type="text" placeholder="例：海外展開の契約成立／静かな確信と高揚"></label>
-        <div style="margin-top:12px; display:flex; gap:10px;">
-          <button type="submit" class="primary">結果を生成</button>
-          <button type="button" class="ghost" id="demoClear">クリア</button>
+  <main class="wrap">
+    <h1>奇跡が起きた未来の一日を描く — 20の問い</h1>
+    <p class="sub">直感で埋めて「AIで小説生成」を押すと、あなたの未来の一日が<strong>小説風</strong>に現れます。</p>
+    <section class="card">
+      <form id="form20">
+        <label>1) 目を開けたとき、どこ？どんな光景？<br><input id="q1" type="text" placeholder="例：海辺の別荘の大きな窓。朝日が波に砕ける。"></label>
+        <label>2) 朝の空気の温度・香りは？<br><input id="q2" type="text" placeholder="例：ひんやり、コーヒーと潮の香り。"></label>
+        <label>3) 寝具の感触は？<br><input id="q3" type="text" placeholder="例：リネンの軽さ、体温のぬくもり。"></label>
+        <label>4) 一緒にいる人は？どんな表情？<br><input id="q4" type="text" placeholder="例：パートナー、安堵の笑み。"></label>
+        <label>5) 「今日は特別」と感じる理由は？<br><input id="q5" type="text" placeholder="例：出版と新事業のローンチ。"></label>
+        <label>6) 窓の外の景色・音は？<br><input id="q6" type="text" placeholder="例：群青の海、遠くの汽笛。"></label>
+        <label>7) 身支度・服装・姿勢は？<br><input id="q7" type="text" placeholder="例：白のシャツドレス、背筋はまっすぐ。"></label>
+        <label>8) 朝食の香りと味、誰と何を話す？<br><input id="q8" type="text" placeholder="例：ハニーの香り、編集者と作戦会議。"></label>
+        <label>9) 玄関を出るときの心のエネルギーは？<br><input id="q9" type="text" placeholder="例：透明で強い推進力。"></label>
+        <label>10) 道中で感じたサインや偶然は？<br><input id="q10" type="text" placeholder="例：777のナンバー、風が急にやむ。"></label>
+        <label>11) 大きな出来事の舞台は？<br><input id="q11" type="text" placeholder="例：ガラス張りの会場・舞台袖。"></label>
+        <label>12) 奇跡の瞬間、周囲の表情や声は？<br><input id="q12" type="text" placeholder="例：一拍の静寂、やがて歓声。"></label>
+        <label>13) あなたの感情と体の反応は？<br><input id="q13" type="text" placeholder="例：胸が熱く、呼吸が深く、視界がクリア。"></label>
+        <label>14) 何が「叶った」と確信した？<br><input id="q14" type="text" placeholder="例：世界線自販機™ 初日完売。"></label>
+        <label>15) それを誰と分かち合い、どんな言葉を？<br><input id="q15" type="text" placeholder="例：チームと抱擁、『やったね』。"></label>
+        <label>16) 夕方の空と風の変化は？<br><input id="q16" type="text" placeholder="例：茜から群青、風は穏やか。"></label>
+        <label>17) 夜の席で今日をどう語る？<br><input id="q17" type="text" placeholder="例：『予定調和じゃない、必然だった』。"></label>
+        <label>18) 感謝や喜びは体のどこに？<br><input id="q18" type="text" placeholder="例：みぞおちの奥が温かい。"></label>
+        <label>19) 眠る前、未来の自分は何とつぶやく？<br><input id="q19" type="text" placeholder="例：ここからは軽やかに増幅する。"></label>
+        <label>20) 明日からの人生はどう変わる？<br><input id="q20" type="text" placeholder="例：創作と経営がひとつに結び、周囲も豊かに。"></label>
+        <div class="row">
+          <button type="submit" class="primary">AIで小説生成（β）</button>
+          <button type="button" class="ghost" id="clearBtn">クリア</button>
+          <span class="note">※ 送信後、数秒〜20秒ほどかかります。</span>
         </div>
       </form>
-      <pre id="demoOut"></pre>
-    </div>
-  </div>
-
-  <!-- PayPal SDK（Sandbox：ひとみさんのClient ID） -->
-  <script src="https://www.paypal.com/sdk/js?client-id=AeAzwLiWSZGELQgyealWAwKK99UVE_6PAASAzVQugsZsWU7GvPp7dvpDNkHAEN29aL2PXwiJjC2Z0mL_&currency=JPY&intent=capture"></script>
+      <div id="out" class="out" hidden></div>
+    </section>
+  </main>
   <script>
-    const ticketOut = document.getElementById('ticketOut');
-    function uuid(){return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16))}
-    function makeLink(){
-      const token = uuid();
-      const expiresAt = new Date(Date.now()+24*60*60*1000);
-      const url = `https://example.com/play?token=${token}`;
-      ticketOut.style.display='block';
-      ticketOut.textContent = `✅ 決済完了（Sandboxデモ）\n\nワンタイムURL: ${url}\n有効期限: ${expiresAt.toLocaleString()}`;
-    }
-    paypal.Buttons({
-      style: { layout: 'vertical', color: 'gold', shape: 'pill', label: 'paypal' },
-      createOrder: (data, actions) => actions.order.create({
-        purchase_units: [{ amount: { currency_code: 'JPY', value: '3000' }, description: '世界線自販機™ - 1プレイ' }]
-      }),
-      onApprove: async (data, actions) => {
-        await actions.order.capture();
-        makeLink();
-      }
-    }).render('#paypal-button-container');
-  </script>
-
-  <script>
-    const form = document.getElementById('demoForm');
-    const outDemo = document.getElementById('demoOut');
-    const clearBtn = document.getElementById('demoClear');
-    function genStory(a1,a2,a3){
-      return `— 未来の記憶 —\n\n${a1||'（未入力）'} で目覚めたあなたは、${a2||'（未入力）'} を通じて今日の中心線を定める。\n今日の成功は「${a3||'（未入力）'}」。\n静かな確信が身体に落ち、次の行動は 3 ステップで明確になる。\n\n① 朝の 5 分：その場面の呼吸を再体験\n② 午前：世界線に沿うタスクを 1 つだけ完了\n③ 夜：今日の象徴を 1 行で記録`;
-    }
-    form.addEventListener('submit', (e)=>{
+    const form = document.getElementById('form20');
+    const out = document.getElementById('out');
+    const clearBtn = document.getElementById('clearBtn');
+    function val(id){ return (document.getElementById(id)?.value || '').trim(); }
+    form.addEventListener('submit', async (e)=>{
       e.preventDefault();
-      const a1 = document.getElementById('q1').value.trim();
-      const a2 = document.getElementById('q2').value.trim();
-      const a3 = document.getElementById('q3').value.trim();
-      outDemo.textContent = genStory(a1,a2,a3);
+      const answers = Array.from({length:20}, (_,i)=> val('q'+(i+1)));
+      out.hidden = false; out.textContent = "AIが物語を生成中…（10〜20秒）";
+      try{
+        const r = await fetch('/api/generate-story', {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ answers, total: 20 })
+        });
+        const { story, error } = await r.json();
+        if (error) throw new Error(typeof error==='string'?error:JSON.stringify(error));
+        out.textContent = story || "生成できませんでした。入力を見直して再実行してください。";
+      }catch(err){ console.error(err); out.textContent = "通信エラー：少し待って再実行してください。"; }
     });
     clearBtn.addEventListener('click', ()=>{
-      ['q1','q2','q3'].forEach(id=>document.getElementById(id).value='');
-      outDemo.textContent='';
+      for (let i=1;i<=20;i++){ const el = document.getElementById('q'+i); if (el) el.value = ''; }
+      out.hidden = true; out.textContent = '';
     });
   </script>
 </body>
